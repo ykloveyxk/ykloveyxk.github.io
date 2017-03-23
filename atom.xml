@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://ykloveyxk.github.io/"/>
-  <updated>2017-03-21T13:25:18.000Z</updated>
+  <updated>2017-03-23T06:28:25.000Z</updated>
   <id>https://ykloveyxk.github.io/</id>
   
   <author>
@@ -14,6 +14,57 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ORACLE数据库数据导入Mysql数据库的一个小方法</title>
+    <link href="https://ykloveyxk.github.io/2017/03/23/ORACLE%E6%95%B0%E6%8D%AE%E5%BA%93%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5Mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E6%96%B9%E6%B3%95/"/>
+    <id>https://ykloveyxk.github.io/2017/03/23/ORACLE数据库数据导入Mysql数据库的一个小方法/</id>
+    <published>2017-03-23T06:21:10.000Z</published>
+    <updated>2017-03-23T06:28:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>首先注明一下：CSDN的博主：完美A型血就是我</p>
+<a id="more"></a>
+<h2 id="导入数据方式"><a href="#导入数据方式" class="headerlink" title="导入数据方式"></a>导入数据方式</h2><blockquote>
+<p>采用 Oracle（pl/sql）-&gt; excel -&gt; MySQL（Navicat for mysql） 的方式  </p>
+</blockquote>
+<h2 id="具体步骤："><a href="#具体步骤：" class="headerlink" title="具体步骤："></a>具体步骤：</h2><h3 id="1-通过pl-sql连接远程oracle数据库"><a href="#1-通过pl-sql连接远程oracle数据库" class="headerlink" title="1. 通过pl/sql连接远程oracle数据库"></a>1. 通过pl/sql连接远程oracle数据库</h3><p>具体步骤方法可百度，相关资料很多。简单描述为：</p>
+<ol>
+<li>下载安装客户端；配置tns文件；</li>
+<li>修改环境变量；</li>
+<li>配置pl/sql（tools-&gt;connet）；</li>
+<li>连接pl/sql；</li>
+</ol>
+<p><strong>注意</strong>：</p>
+<p>最好安装oracle的完整客户端，不要使用简易的客户端，因为简易的客户端自身不带有进行导出导入数据的功能。如果导出按钮为灰色，一般说明客户端有问题。</p>
+<p>pl/sql好像只支持32位系统，因此安装oracle客户端时，也最好使用 32位的；</p>
+<p>导出文件的格式有三种形式，dmp，sql和plsql自己带有的格式。这三种方式的导出文件包括sql，都不能直接导入mysql。</p>
+<h3 id="2-将数据导入到excel"><a href="#2-将数据导入到excel" class="headerlink" title="2. 将数据导入到excel"></a>2. 将数据导入到excel</h3><p>Oracle和mysql的语法不兼容，导出的数据文件不能直接导入mysql。对于数据量较小。少于10w条数据量的表，现在有一个较为笨拙的方法。即将数据导入到excel，再从excel导入mysql</p>
+<p>Pl/sql本身可以将数据导入到excel（无论是视图还是表格。都可直接导入），使用查看表数据，然后在数据显示界面的空白处点击右键，将数据导入excel保存为.xls格式即可。</p>
+<h3 id="3-导入mysql"><a href="#3-导入mysql" class="headerlink" title="3. 导入mysql"></a>3. 导入mysql</h3><p>这里需要使用一款mysql的官方推荐软件，Navivat for mysql，这款软件可以简易的连接服务器数据库，并将多种格式的文件导入数据库，这其中就包含.xls的excel文件。</p>
+<p><strong>注意</strong>：</p>
+<p>导出的数据存在以下几点问题，首先没有id字段，需要手动命名为id；</p>
+<p>导出的数据表记得要自己修改名称。默认名称中含有空格，也可以导入，但是导入后无法操作，mysql不认可空格；</p>
+<p>所有字段的默认数据形式全部为varchar（255），需要根据原来的oracle数据表形式进行参照手动修改。<br>缺陷</p>
+<p>这个方法笨拙且试用范围窄，很明显不是正确的方法，但是也算是一个将数据进行迁移的办法，在还没有找到更好的将数据从远程oracle同步到本地mysql服务器的方法之前，可将旧一下，先用着。：）</p>
+<p>缺点如下：</p>
+<ol>
+<li>步骤较多，麻烦；</li>
+<li>试用范围小，只适合10w行以下，理论是都可以适应，但是数据量过大比如到达百万级。从pl/sql到excel的导入过程将会十分漫长。</li>
+<li>不能实时同步。这是现在最为致命的问题。数据必须人工的进行定时的导出导入，不能与一卡通的直连服务器进行实时的更新，毫无疑问很不合理。</li>
+</ol>
+<h2 id="求助大神！"><a href="#求助大神！" class="headerlink" title="求助大神！"></a>求助大神！</h2><p>如果哪位大神有将远程oracle数据库中的数据导入mysql数据库中的比较简单或者说比较正统的方法的话，请麻烦务必要告诉我，在此感激不尽。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;首先注明一下：CSDN的博主：完美A型血就是我&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="ORACLE" scheme="https://ykloveyxk.github.io/tags/ORACLE/"/>
+    
+  </entry>
   
   <entry>
     <title>vue-login 通过一个小项目带你走进vue全栈开发</title>
