@@ -393,56 +393,18 @@
 
       
         
-          
-            <blockquote>
+          <blockquote>
 <p>个人博客：<a href="https://ykloveyxk.github.io/">https://ykloveyxk.github.io/</a>  </p>
 </blockquote>
 <p>最近作为 超廉价劳动力 在帮学校做一个 app 的后台。技术选型的时候实在不想用已经用烂的 jquery + php + mysql 这一套。于是就选择了 Vue + mongodb + nodejs 的模式，也顺带看看这些新技术在实战中的具体表现。开发了一段时间，最近也差不多快完成了，当然免不了踩了一些坑，发出来和大家交流一下，也顺带说说这种技术栈的项目该如何部署。</p>
-<p>注：本文不是开发教学文档，只是讨论我在部署阶段遇到的问题。如果你恰好也遇到，那么希望能够帮到你。😁</p>
-<h2 id="前端打包"><a href="#前端打包" class="headerlink" title="前端打包"></a>前端打包</h2><hr>
-<p>使用 vue + node 进行全栈开发时，前后端是完全分离的，开发完成后需要将 vue 写的前端打包成静态页面部署在服务器上运行，不要直接在服务器上 node run dev……在这个阶段，需要注意以下几点：</p>
-<h3 id="1-打包出现以下或类似错误"><a href="#1-打包出现以下或类似错误" class="headerlink" title="1. 打包出现以下或类似错误"></a>1. 打包出现以下或类似错误</h3><blockquote>
-<p>ERROR in static/js/0.8d18fe144f17fc217b92.js from UglifyJs<br>Unexpected token punc «(», expected punc «:» [static/js/0.8d18fe144f17fc217b92.js:45,8]  </p>
-</blockquote>
-<p>解决方法：</p>
-<ol>
-<li><p>安装es2015的转化器</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install --save-dev babel-preset-es2015</div></pre></td></tr></table></figure>
-</li>
-<li><p>新建文件 .babelrc，增加内容</p>
- <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"presets"</span>: [<span class="string">"es2015"</span>]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>这个错误其实解决起来很简单，就是利用Babel来转化你写的ES2015。但是在我的上篇文章中，有人提 issue 问过我这个问题，在这里就顺带说下。</p>
-<h4 id="2-打包完成部署服务器后，字体图标不显示"><a href="#2-打包完成部署服务器后，字体图标不显示" class="headerlink" title="2. 打包完成部署服务器后，字体图标不显示"></a>2. 打包完成部署服务器后，字体图标不显示</h4><p>解决方案：<a href="http://blog.csdn.net/xiaoermingn/article/details/53543001" target="_blank" rel="external">http://blog.csdn.net/xiaoermingn/article/details/53543001</a></p>
-<p>如果你引用了 font-awesome 或类似的字体图标库，发现部署在服务器上所有的字体图标都不显示了，那么你需要读读我上面列出的这篇文章。这是因为 webpack 有自己的字体文件加载方式。</p>
-<h2 id="服务器部署"><a href="#服务器部署" class="headerlink" title="服务器部署"></a>服务器部署</h2><hr>
-<h4 id="1-前端部署"><a href="#1-前端部署" class="headerlink" title="1. 前端部署"></a>1. 前端部署</h4><p>首先建议在服务器上部署nginx，具体部署方法百度有很多，大家自行查找。部署完成后将打包后文件移动至 nginx 的资源目录下。例如：/data/www/</p>
-<p>然后按项目所需修改配置文件：例如端口号，项目地址等，例如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    listen       8088;</div><div class="line">        location / &#123;</div><div class="line">        root   /usr/share/nginx/html;</div><div class="line">        index  index.html index.htm;</div><div class="line">    &#125;</div><div class="line">    location /static &#123;</div><div class="line">        <span class="built_in">alias</span> /data/www/dist/static/;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>注</strong>：多说一句，如果你的服务端没有进行相关配置，那么vue-router 请一定不要使用history模式！！否则会出现路由跳转错误的bug！！我当初就是被这个问题困扰了很久，最后去看文档才发现。</p>
-<h4 id="2-后端部署"><a href="#2-后端部署" class="headerlink" title="2. 后端部署"></a>2. 后端部署</h4><p>后端部署很简单，就是在服务器上运行 node 程序，但是不要生硬的 node server &amp;</p>
-<p>最好是将后端文件分离出来后，使用 pm2 做负载均衡，pm2 是一个带有负载均衡功能的Node应用的进程管理器.</p>
-<p>具体如何使用，推荐这篇专栏：</p>
-<p><a href="http://blog.csdn.net/qq_17475155/article/details/53823862" target="_blank" rel="external">使用pm2躺着实现负载均衡 - Richardwei~的专栏        - 博客频道 - CSDN.NET</a></p>
-<h4 id="3-前后端联系（跨域）"><a href="#3-前后端联系（跨域）" class="headerlink" title="3. 前后端联系（跨域）"></a>3. 前后端联系（跨域）</h4><p>因为后端可能运行在别的端口，那么就会出现跨域情况。使用 nginx 进行反向代理，安装完 nginx 后，配置 nginx 配置文件，即可解决该问题，例如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    location /api &#123;</div><div class="line">            proxy_pass http://***.***.**.**:****/api;</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>到此，前后端部署步骤基本完毕。</p>
-<h3 id="项目心得"><a href="#项目心得" class="headerlink" title="项目心得"></a>项目心得</h3><p>以下是除开前后端部署，我在项目中遇到的一些其他问题，也和大家分享一下。</p>
-<ol>
-<li><p>mongodb 请务必不要在服务器上无密码裸奔。mongodb因为前段时间的 “ <a href="http://tech.it168.com/a2017/0109/3088/000003088671.shtml" target="_blank" rel="external">赎金事件</a> ” 被很多人觉得安全性存在问题，但是其实是因为大多mongodb数据库在服务器上无密码裸奔。这是非常危险的，请一定不要这么做。</p>
-</li>
-<li><p>mongoose 中 model在起名时，会发生表名自动复数化的情况，原因为：<br><a href="http://www.tuicool.com/articles/R36bMbA" target="_blank" rel="external">Mongoose在创建Model时对Collection的命名策略 - 推酷</a><br>因此应该按照 model -&gt; 建表的顺序，如果是从外部导入的表，例如从mysql导入，那么应该保证表名为复数形式，否则会出现无法操作collention的情况。</p>
-</li>
-<li><p>请务必使用集成开发环境进行项目开发，如果担心网络问题以及需要免费的私人仓库，那么可以使用一些国产的代码托管平台，真的能够为团队开发规避许多不必要的问题。</p>
-</li>
-<li><p>其实项目中的技术问题很多时候都不是问题，而人和人之间的问题才是真的问题……这个也是我带这个小团队后的切身感受。</p>
-</li>
-</ol>
-<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>如果大家发现我的文章中存在问题，那么请不吝赐教，大家共同进步。如果我转载的文章原作者不愿自己文章被转载，请告知，我会及时删除。如果你觉得我写的对你有点帮助，就点赞鼓励一下，三克油。</p>
-<p>全文完</p>
-
-          
+<p>注：本文不是开发教学文档，只是讨论我在部署阶段遇到的问题。如果你恰好也遇到，那么希望能够帮到你。😁<br>
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/05/10/vue全栈开发部署你需要知道的一些事/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
