@@ -114,7 +114,7 @@
 它是介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的，因此它得以快速发展。">
 <meta property="og:image" content="http://219.245.12.129:8088/img/0.png">
 <meta property="og:image" content="http://219.245.12.129:8088/img/2.png">
-<meta property="og:updated_time" content="2017-07-17T09:54:02.000Z">
+<meta property="og:updated_time" content="2017-07-17T09:55:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MongoDB被盗，黑客真能帮你恢复？">
 <meta name="twitter:description" content="谈到MongoDB，想必大家都不陌生，这是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。
@@ -417,11 +417,13 @@
 <p><strong>“不是mongo不靠谱，而是你呀不会用！”</strong></p>
 </blockquote>
 <p>因为被盗数据库基本都有以下特点：</p>
+<blockquote>
 <ol>
 <li>裸奔公网！门户大开！我个人认为这是最大原因；</li>
 <li>数据库本身没设密码，mongodb不同于mysql，它的安装使用太简单，下包 -&gt; 解压 -&gt; 运行！导致很多人数据库压根没密码；</li>
 <li>服务器本身没什么安全防范措施，黑客很简单的就能侵入服务器，盗取数据库；</li>
 </ol>
+</blockquote>
 <p>因此，如果项目使用的是mongo数据库（不考虑分片），那么在数据库部署时，一定要多花心思，多多查阅资料！如果这一步没踏稳，后面几本白搭。这里找一篇部署的相关文章，大家可以学习一下：</p>
 <p><a href="http://www.mongoing.com/archives/631" target="_blank" rel="external">mongodb安全部署</a></p>
 <p>最重要的是：存放数据库的服务器一定要从公网上下来！（此处重复三次以显示重要性）不然就好像一个花枝招展的大美女在流氓丛中走来走去，这是逼人犯罪！！</p>
